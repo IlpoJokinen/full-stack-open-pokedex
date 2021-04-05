@@ -13,6 +13,10 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
+      - name: testing commit messages
+        env:
+          COMMIT_MESSAGES: ${{ toJSON(github.event.commits.*.message) }}
+        run: echo "$COMMIT_MESSAGES"
       - name: testing join function syntax
         env:
           COMMIT_MESSAGES_JOINED: ${{ join(toJSON(github.event.commits.*.message), ',') }}
