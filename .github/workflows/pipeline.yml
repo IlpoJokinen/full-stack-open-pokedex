@@ -13,6 +13,10 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
+      - name: event
+        env:
+          EVENT: ${{ toJson(github.event) }}
+        run: echo "$EVENT"
       - name: commits
         env:
           COMMITS: ${{ toJson(github.event.pull_request.commits) }}
