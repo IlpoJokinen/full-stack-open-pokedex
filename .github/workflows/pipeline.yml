@@ -15,15 +15,15 @@ jobs:
       - uses: actions/checkout@v2
       - name: testing commit messages
         env:
-          COMMIT_MESSAGES: ${{ toJSON(github.event.commits.*.message) }}
+          COMMIT_MESSAGES: ${{ toJson(github.event.commits.*.message) }}
         run: echo "$COMMIT_MESSAGES"
       - name: testing join function syntax
         env:
-          COMMIT_MESSAGES_JOINED: ${{ join(toJSON(github.event.commits.*.message), ',') }}
+          COMMIT_MESSAGES_JOINED: ${{ join(toJson(github.event.commits.*.message), ',') }}
         run: echo "$COMMIT_MESSAGES_JOINED"
       - name: testing contains
         env:
-          CONTAINS: ${{ contains(join(toJSON(github.event.commits.*.message), ''), 'skip') }}
+          CONTAINS: ${{ contains(join(toJson(github.event.commits.*.message), ''), 'skip') }}
         run: echo "$CONTAINS"
 
   # simple_deployment_pipeline:
