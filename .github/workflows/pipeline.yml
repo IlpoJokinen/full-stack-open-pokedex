@@ -22,6 +22,7 @@ jobs:
   #       env:
   #         CONTAINS: ${{ contains(join(github.event.commits.*.message, ''), '#skip') }}
   #         run:
+
   simple_deployment_pipeline:
     runs-on: ubuntu-18.04
     steps:
