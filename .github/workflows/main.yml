@@ -17,11 +17,12 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
-      - name: commits
+      - name: get commit message
+        run: |
+          echo ::set-env name=commitmsg::$(git log --format=%B -n 1 ${{ github.event.after }})
+      - name: show commit message
+        run: echo $commitmsg
+      - name: get all commit after hashes
         env:
-          COMMITS: ${{ toJson(github.event.commits) }}
-        run: echo "$COMMITS"
-      - name: commit messages
-        env:
-          COMMIT_MESSAGES: ${{ toJson(github.event.commits.*.message) }}
-        run: echo "$COMMIT_MESSAGES"
+          COMMIT_HASHES: ${{ toJson(github.event.*.after) }}
+        run: echo "$COMMIT_HASHES"
