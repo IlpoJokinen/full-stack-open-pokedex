@@ -20,7 +20,7 @@ jobs:
       - name: testing contains
         env:
           CONTAINS: ${{ contains(join(github.event.commits.*.message, ''), 'skip') }}
-          run: echo "$CONTAINS"
+        run: echo "$CONTAINS"
 
   # simple_deployment_pipeline:
   #   runs-on: ubuntu-18.04
