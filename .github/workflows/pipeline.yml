@@ -13,17 +13,13 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
-      - name: testing commit messages
-        env:
-          COMMITS: ${{ github.event.commits.*.message }}
-        run: echo "$COMMITS"
       - name: testing join function syntax
         env:
-          COMMIT_MESSAGES_JOINED: ${{ join(github.event.commits.*.message, ',') }}
+          COMMIT_MESSAGES_JOINED: ${{ join(toJSON(github.event.commits.*.message), ',') }}
         run: echo "$COMMIT_MESSAGES_JOINED"
       - name: testing contains
         env:
-          CONTAINS: ${{ contains(join(github.event.commits.*.message, ''), 'skip') }}
+          CONTAINS: ${{ contains(join(toJSON(github.event.commits.*.message), ''), 'skip') }}
         run: echo "$CONTAINS"
 
   # simple_deployment_pipeline:
