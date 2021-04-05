@@ -8,47 +8,47 @@ on:
     branches: [master]
     types: [opened, synchronize]
 
-jobs:
-  a_test_job:
-    runs-on: ubuntu-18.04
-    steps:
-      - uses: actions/checkout@v2
-      - name: gihub context
-        env:
-          GITHUB_CONTEXT: ${{ toJson(github) }}
-        run: echo "$GITHUB_CONTEXT"
-      - name: commits
-        env:
-          COMMITS: ${{ toJson(github.event.commits) }}
-        run: echo "$COMMITS"
-      - name: commit messages
-        env:
-          COMMIT_MESSAGES: ${{ toJson(github.event.commits.*.message) }}
-        run: echo "$COMMIT_MESSAGES"
-  test_job:
-    runs-on: ubuntu-18.04
-    steps:
-      - uses: actions/checkout@v2
-      - name: event
-        env:
-          EVENT: ${{ toJson(github.event) }}
-        run: echo "$EVENT"
-      - name: commits
-        env:
-          COMMITS: ${{ toJson(github.event.pull_request._links.commits.href) }}
-        run: echo "$COMMITS"
-      - name: commit messages
-        env:
-          COMMIT_MESSAGES: ${{ toJson(github.event.pull_request.commits.*.message) }}
-        run: echo "$COMMIT_MESSAGES"
-      - name: testing join function syntax
-        env:
-          COMMIT_MESSAGES_JOINED: ${{ join(toJson(github.event.pull_request.commits.*.message), ',') }}
-        run: echo "$COMMIT_MESSAGES_JOINED"
-      - name: testing contains
-        env:
-          CONTAINS: ${{ contains(join(toJson(github.event.commits.*.message), ''), 'skip') }}
-        run: echo "$CONTAINS"
+  jobs:
+    a_test_job:
+      runs-on: ubuntu-18.04
+      steps:
+        - uses: actions/checkout@v2
+        - name: gihub context
+          env:
+            GITHUB_CONTEXT: ${{ toJson(github) }}
+          run: echo "$GITHUB_CONTEXT"
+        - name: commits
+          env:
+            COMMITS: ${{ toJson(github.event.commits) }}
+          run: echo "$COMMITS"
+        - name: commit messages
+          env:
+            COMMIT_MESSAGES: ${{ toJson(github.event.commits.*.message) }}
+          run: echo "$COMMIT_MESSAGES"
+    test_job:
+      runs-on: ubuntu-18.04
+      steps:
+        - uses: actions/checkout@v2
+        - name: event
+          env:
+            EVENT: ${{ toJson(github.event) }}
+          run: echo "$EVENT"
+        - name: commits
+          env:
+            COMMITS: ${{ toJson(github.event.pull_request._links.commits.href) }}
+          run: echo "$COMMITS"
+        - name: commit messages
+          env:
+            COMMIT_MESSAGES: ${{ toJson(github.event.pull_request.commits.*.message) }}
+          run: echo "$COMMIT_MESSAGES"
+        - name: testing join function syntax
+          env:
+            COMMIT_MESSAGES_JOINED: ${{ join(toJson(github.event.pull_request.commits.*.message), ',') }}
+          run: echo "$COMMIT_MESSAGES_JOINED"
+        - name: testing contains
+          env:
+            CONTAINS: ${{ contains(join(toJson(github.event.commits.*.message), ''), 'skip') }}
+          run: echo "$CONTAINS"
 
   # simple_deployment_pipeline:
   #   runs-on: ubuntu-18.04
