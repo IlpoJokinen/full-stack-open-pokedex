@@ -9,69 +9,68 @@ on:
     types: [opened, synchronize]
 
 jobs:
-  # test_job:
-  #   runs_on: ubuntu-18.04
+  test_job:
+    runs_on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: testing join function syntax
+        env:
+          COMMIT_MESSAGES_JOINED: ${{ join(github.event.commits.*.message, '') }}
+        run: echo "$COMMIT_MESSAGES_JOINED"
+      - name: testing contains
+        env:
+          CONTAINS: ${{ contains(join(github.event.commits.*.message, ''), 'skip') }}
+          run: echo "$CONTAINS"
+
+  # simple_deployment_pipeline:
+  #   runs-on: ubuntu-18.04
   #   steps:
   #     - uses: actions/checkout@v2
-  #     - name: testing join function syntax
-  #       env:
-  #         COMMIT_MESSAGES_JOINED: ${{ join(github.event.commits.*.message, '') }}
-  #         CONTAINS: ${{ contains($COMMIT_MESSAGES_JOINED, 'skip') }}
-  #       run: echo "$COMMIT_MESSAGES_JOINED"
-  #     - name: testing contains
-  #       env:
-  #         CONTAINS: ${{ contains(join(github.event.commits.*.message, ''), '#skip') }}
-  #         run:
+  #     - uses: actions/setup-node@v1
+  #       with:
+  #         node-version: "12.x"
+  #     - name: npm install
+  #       if: ${{ github.event_name == 'pull_request' }}
+  #       run: npm install
+  #     - name: lint
+  #       if: ${{ github.event_name == 'pull_request' }}
+  #       run: npm run eslint
+  #     - name: build
+  #       if: ${{ github.event_name == 'pull_request' }}
+  #       run: npm run build
+  #     - name: test
+  #       if: ${{ github.event_name == 'pull_request' }}
+  #       run: npm test
+  #     - name: e2e tests
+  #       if: ${{ github.event_name == 'pull_request' }}
+  #       uses: cypress-io/github-action@v2
+  #       with:
+  #         command: npm run test:e2e
+  #         start: npm run start-prod
+  #         wait-on: http://localhost:5000
+  #     - name: Deploy to Heroku
+  #       if: |
+  #         github.event_name == 'push' &&
+  #         contains(join(github.event.commits.*.message, ''), 'skip')
+  #       uses: akhileshns/heroku-deploy@v3.12.12
+  #       with:
+  #         heroku_api_key: ${{secrets.HEROKU_API_KEY}}
+  #         heroku_app_name: "pokemon-index-application"
+  #         heroku_email: "bgg300@myy.haaga-helia.fi"
+  #         healthcheck: "https://pokemon-index-application.herokuapp.com/health"
+  #         checkstring: "ok"
+  #         rollbackonhealthcheckfailed: true
 
-  simple_deployment_pipeline:
-    runs-on: ubuntu-18.04
-    steps:
-      - uses: actions/checkout@v2
-      - uses: actions/setup-node@v1
-        with:
-          node-version: "12.x"
-      - name: npm install
-        if: ${{ github.event_name == 'pull_request' }}
-        run: npm install
-      - name: lint
-        if: ${{ github.event_name == 'pull_request' }}
-        run: npm run eslint
-      - name: build
-        if: ${{ github.event_name == 'pull_request' }}
-        run: npm run build
-      - name: test
-        if: ${{ github.event_name == 'pull_request' }}
-        run: npm test
-      - name: e2e tests
-        if: ${{ github.event_name == 'pull_request' }}
-        uses: cypress-io/github-action@v2
-        with:
-          command: npm run test:e2e
-          start: npm run start-prod
-          wait-on: http://localhost:5000
-      - name: Deploy to Heroku
-        if: |
-          github.event_name == 'push' &&
-          contains(join(github.event.commits.*.message, ''), 'skip')
-        uses: akhileshns/heroku-deploy@v3.12.12
-        with:
-          heroku_api_key: ${{secrets.HEROKU_API_KEY}}
-          heroku_app_name: "pokemon-index-application"
-          heroku_email: "bgg300@myy.haaga-helia.fi"
-          healthcheck: "https://pokemon-index-application.herokuapp.com/health"
-          checkstring: "ok"
-          rollbackonhealthcheckfailed: true
-
-  version_bumper:
-    runs-on: ubuntu-18.04
-    if: |
-      github.event_name == 'pull_request' &&
-      contains(join(github.event.commits.*.message, ''), 'skip')
-    steps:
-      - uses: actions/checkout@v2
-      - name: Bump version and push tag
-        uses: anothrNick/github-tag-action@1.33.0
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          WITH_V: true
-          DEFAULT_BUMP: patch
+  # version_bumper:
+  #   runs-on: ubuntu-18.04
+  #   if: |
+  #     github.event_name == 'pull_request' &&
+  #     contains(join(github.event.commits.*.message, ''), 'skip')
+  #   steps:
+  #     - uses: actions/checkout@v2
+  #     - name: Bump version and push tag
+  #       uses: anothrNick/github-tag-action@1.33.0
+  #       env:
+  #         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  #         WITH_V: true
+  #         DEFAULT_BUMP: patch
