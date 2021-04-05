@@ -10,7 +10,7 @@ on:
 
 jobs:
   test_job:
-    runs_on: ubuntu-18.04
+    runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
       - name: testing join function syntax
