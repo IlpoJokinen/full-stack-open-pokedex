@@ -19,8 +19,8 @@ jobs:
         run: echo "$GITHUB_CONTEXT"
       - name: get commit message
         env:
-          COMMIT_MESSAGE: ${{ git log --format=%B -n 1 ${{ github.event.after }} }}
-        run: echo "$COMMIT_MESSAGE"
+          COMMIT_MESSAGE: ${{ github.event.after }}
+        run: git log --format=%B -n 1 $COMMIT_MESSAGE
       - name: get all commit after hashes
         env:
           COMMIT_HASHES: ${{ toJson(github.event.*.after) }}
