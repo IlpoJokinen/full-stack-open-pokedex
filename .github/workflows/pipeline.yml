@@ -19,7 +19,7 @@ jobs:
         run: echo "$EVENT"
       - name: commits
         env:
-          COMMITS: ${{ toJson(github.event.pull_request.commits) }}
+          COMMITS: ${{ toJson(github.event.pull_request.commits.href) }}
         run: echo "$COMMITS"
       - name: commit messages
         env:
