@@ -13,6 +13,10 @@ jobs:
     runs-on: ubuntu-18.04
     steps:
       - uses: actions/checkout@v2
+      - name: testing commit messages
+        env:
+          COMMITS: ${{ github.event.commits.*.message }}
+        run: echo "$COMMITS"
       - name: testing join function syntax
         env:
           COMMIT_MESSAGES_JOINED: ${{ join(github.event.commits.*.message, ',') }}
