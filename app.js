@@ -11,5 +11,5 @@ app.listen(PORT, () => {
 })
 
 app.get('/health', (req, res) => {
-  res.sendStatus(400).json({ message: 'Broken application' })
+  res.send('ok')
 })
