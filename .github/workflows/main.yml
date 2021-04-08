@@ -4,9 +4,6 @@ on:
   push:
     branches:
       - master
-  pull_request:
-    branches: [master]
-    types: [opened, synchronize]
 
 jobs:
   a_test_job:
@@ -17,9 +14,11 @@ jobs:
         env:
           GITHUB_CONTEXT: ${{ toJson(github) }}
         run: echo "$GITHUB_CONTEXT"
-      - name: get commit message
-        run: echo "$(git log --format=%B -n 1 HEAD^1)"
-      - name: get all commit after hashes
+      - name: commits
         env:
-          COMMIT_HASHES: ${{ toJson(github.event.*.after) }}
-        run: echo "$COMMIT_HASHES"
+          COMMITS: ${{ toJson(github.event.commits) }}
+        run: echo "$COMMITS"
+      - name: commit messages
+        env:
+          COMMIT_MESSAGES: ${{ toJson(github.event.commits.*.message) }}
+        run: echo "$COMMIT_MESSAGES"
