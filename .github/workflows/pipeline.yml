@@ -24,10 +24,7 @@ jobs:
           fields: repo,message,commit,author,took
           custom_payload: |
             {
-              attachements: [{
-                color: 'good',
-                text: `a new version deployed to https://pokemon-index-application.herokuapp.com/ ${process.env.AS_COMMIT} by ${process.env.AS_AUTHOR} build took ${process.env.AS_TOOK}!`
-              }]
+              text: "a new version deployed to https://pokemon-index-application.herokuapp.com/ ${process.env.AS_COMMIT} by \n${process.env.AS_AUTHOR} build took ${process.env.AS_TOOK}!"
             }
         env:
           SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
