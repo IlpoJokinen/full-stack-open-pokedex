@@ -1,0 +1,20 @@
+name: Periodic Health Check
+
+on:
+  schedule:
+    - cron: "0/10 8-17 * * 4"
+  pull_request:
+    branches: [master]
+    types: [opened, synchronize]
+jobs:
+  periodic_health_check:
+    runs-on: ubuntu-18.04
+    steps:
+      - name: Url health check action
+        uses: jtalk/url-health-check-action@v1.5
+        with:
+          url: https://pokemon-index-application.herokuapp.com/health
+          follow-redirect: no
+          max-attempts: 3
+          retry-delay: 5s
+          retry-all: no
