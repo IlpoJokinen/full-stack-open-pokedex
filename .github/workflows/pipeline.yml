@@ -16,25 +16,25 @@ jobs:
       - uses: actions/setup-node@v1
         with:
           node-version: "12.x"
-      # - name: npm install
-      #   if: ${{ github.event_name == 'pull_request' }}
-      #   run: npm install
-      # - name: lint
-      #   if: ${{ github.event_name == 'pull_request' }}
-      #   run: npm run eslint
-      # - name: build
-      #   if: ${{ github.event_name == 'pull_request' }}
-      #   run: npm run build
-      # - name: test
-      #   if: ${{ github.event_name == 'pull_request' }}
-      #   run: npm test
-      # - name: e2e tests
-      #   if: ${{ github.event_name == 'pull_request' }}
-      #   uses: cypress-io/github-action@v2
-      #   with:
-      #     command: npm run test:e2e
-      #     start: npm run start-prod
-      #     wait-on: http://localhost:5000
+      - name: npm install
+        if: ${{ github.event_name == 'pull_request' }}
+        run: npm install
+      - name: lint
+        if: ${{ github.event_name == 'pull_request' }}
+        run: npm run eslint
+      - name: build
+        if: ${{ github.event_name == 'pull_request' }}
+        run: npm run build
+      - name: test
+        if: ${{ github.event_name == 'pull_request' }}
+        run: npm test
+      - name: e2e tests
+        if: ${{ github.event_name == 'pull_request' }}
+        uses: cypress-io/github-action@v2
+        with:
+          command: npm run test:e2e
+          start: npm run start-prod
+          wait-on: http://localhost:5000
       - name: Deploy to Heroku
         if: |
           github.event_name == 'push' &&
@@ -47,6 +47,29 @@ jobs:
           healthcheck: "https://pokemon-index-application.herokuapp.com/health"
           checkstring: "ok"
           rollbackonhealthcheckfailed: true
+      - name: The job has succeeded
+        if: |
+          github.event_name == 'push' &&
+          success()
+        uses: 8398a7/action-slack@v3
+        with:
+          status: custom
+          fields: commit,author,took
+          custom_payload: |
+            {
+              text: "a new version deployed to https://pokemon-index-application.herokuapp.com/ ${process.env.AS_COMMIT} by \n${process.env.AS_AUTHOR} build took ${process.env.AS_TOOK}!"
+            }
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+          MATRIX_CONTENT: ${{ toJson(matrix) }}
+      - name: Failed Github Actions
+        if: ${{ failure() }}
+        uses: 8398a7/action-slack@v3
+        with:
+          status: ${{ job.status }}
+          fields: repo,message,commit,author,took
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
   version_bumper:
     runs-on: ubuntu-18.04
@@ -56,7 +79,7 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - name: Bump version and push tag
-        uses: anothrNick/github-tag-action@1.33.0
+        uses: anothrNick/github-tag-action@eca2b69f9e2c24be7decccd0f15fdb1ea5906598
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           WITH_V: true
